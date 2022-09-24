@@ -5,7 +5,7 @@ import "forge-std/Test.sol";
 import { AWAlphaPass } from "src/AWAlphaPass.sol";
 import { Merkle } from "@murky/Merkle.sol";
 
-contract NFTTokenTest is Test {
+contract AWAlphaPassTest is Test {
     AWAlphaPass awAlphaPass;
 
     address MaxSchnaider = 0xb1D7daD6baEF98df97bD2d3Fb7540c08886e0299;
