@@ -40,7 +40,7 @@ contract AWAlphaPassTest is Test {
 
     function testClaimUnwhitelisted() public {
         vm.prank(MaxSchnaider);
-        vm.expectRevert(bytes("AWAlphaPass: Can't verify whitelisting"));
+        vm.expectRevert(bytes("AWAlphaPass: Cant verify whitelisting"));
         awAlphaPass.claim(merkleProof);
     }
 
@@ -54,8 +54,8 @@ contract AWAlphaPassTest is Test {
 
     function testDoubleClaim() public {
         awAlphaPass.setWhitelistMerkleRoot(merkleRoot);
-        awAlphaPass.claimTo(MaxSchnaider);
         vm.prank(MaxSchnaider);
+        awAlphaPass.claim(merkleProof);
         vm.expectRevert(bytes("AWAlphaPass: Alpha pass is already claimed"));
         awAlphaPass.claim(merkleProof);
     }

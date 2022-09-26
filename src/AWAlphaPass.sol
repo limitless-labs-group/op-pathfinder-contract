@@ -22,7 +22,7 @@ contract AWAlphaPass is ERC721, Ownable {
     constructor() ERC721("Atlantis World Alpha Pass", "AWAP") {}
 
     modifier onlyWhitelisted(bytes32[] calldata proof) {
-        require(isWhitelisted(msg.sender, proof), "AWAlphaPass: Can't verify whitelisting");
+        require(isWhitelisted(msg.sender, proof), "AWAlphaPass: Cant verify whitelisting");
         _;
     }
 
