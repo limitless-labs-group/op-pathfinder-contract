@@ -17,6 +17,7 @@ contract AWAlphaPass is ERC721, Ownable {
     uint256 public totalSupply = 0;
     string public baseURI = "ipfs://bafkreid5jb3arfd75i7srp7vafheud5qu7gv6wif4pbfz5eyyyz6l6qqcy";
     bytes32 public whitelistMerkleRoot;
+    mapping(address => bool) claimedByAddress;
 
     constructor() ERC721("Atlantis World Alpha Pass", "AWAP") {}
 
@@ -26,7 +27,7 @@ contract AWAlphaPass is ERC721, Ownable {
     }
 
     modifier onlySingleClaim() {
-        require(!(balanceOf(msg.sender) > 0), "AWAlphaPass: Alpha pass is already claimed");
+        require(!claimedByAddress[msg.sender], "AWAlphaPass: Alpha pass is already claimed");
         _;
     }
 
@@ -50,6 +51,7 @@ contract AWAlphaPass is ERC721, Ownable {
         uint256 tokenId = totalSupply + 1;
         _safeMint(msg.sender, tokenId);
         totalSupply++;
+        claimedByAddress[msg.sender] = true;
     }
 
     function tokenURI(uint256 tokenId)
