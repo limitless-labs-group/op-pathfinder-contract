@@ -15,7 +15,7 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 contract AWAlphaPass is ERC721, Ownable {
     uint256 public totalSupply = 0;
-    string public baseURI = "ipfs://bafkreifwketchptowimgirw5zxbcunp53azihwfz3kh5kw3qcbofazj5ea";
+    string public baseURI = "ipfs://bafkreid5jb3arfd75i7srp7vafheud5qu7gv6wif4pbfz5eyyyz6l6qqcy";
     bytes32 public whitelistMerkleRoot;
 
     constructor() ERC721("Atlantis World Alpha Pass", "AWAP") {}
