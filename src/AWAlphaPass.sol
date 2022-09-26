@@ -58,6 +58,6 @@ contract AWAlphaPass is ERC721, Ownable {
         override
         returns (string memory)
     {
-        return string(abi.encodePacked(baseURI));
+        return baseURI;
     }
 }
