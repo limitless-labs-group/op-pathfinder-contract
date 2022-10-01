@@ -9,9 +9,9 @@ pragma solidity ^0.8.15;
  * gaming and education in one lightweight virtual world that's accessible to everybody.
  */
 
-import { ERC721 } from "@solmate/tokens/ERC721.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import { ERC721 } from "solmate/tokens/ERC721.sol";
+import { Ownable } from "openzeppelin-contracts/contracts/access/Ownable.sol";
+import "openzeppelin-contracts/contracts/utils/cryptography/MerkleProof.sol";
 
 contract AWAlphaPass is ERC721, Ownable {
     uint256 public totalSupply = 0;

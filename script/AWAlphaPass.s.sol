@@ -11,6 +11,3 @@ contract Deploy is Script {
     vm.stopBroadcast();
   }
 }
-
-// deploy cmd
-// forge create src/AWAlphaPass.sol:AWAlphaPass --rpc-url https://opt-goerli.g.alchemy.com/v2/kWZ8YJZFfStiHTBmEFzVkID9KKrKI8ZD --private-key <KEY> --legacy
