@@ -10,17 +10,17 @@ git clone https://github.com/atlantis-world-core/alpha-pass-contract.git
 cd alpha-pass-contract
 forge install
 ```
-# Test
+### Test
 
 `forge test -vv`
 
-# Deploy
+### Deploy
 
 ```
 forge create src/AWAlphaPass.sol:AWAlphaPass --rpc-url <RPC_URL> --private-key <PRIVATE_KEY> --legacy
 ```
 
-# Send transaction
+### Send transaction
 
 ```
 cast send <CONTRACT_ADDRESS> "claimTo(address)()" <ADDRESS> --rpc-url <RPC_URL> --private-key <PRIVATE_KEY> --legacy --gas 1000000
