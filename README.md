@@ -28,7 +28,7 @@ forge create src/AWAlphaPass.sol:AWAlphaPass --rpc-url <RPC_URL> --private-key <
 cast send <CONTRACT_ADDRESS> "claimTo(address)()" <ADDRESS> --rpc-url <RPC_URL> --private-key <PRIVATE_KEY> --legacy --gas 1000000
 ```
 
-## Use with Hardhar
+## Use with Hardhat
 
 ```
 npm install
