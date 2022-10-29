@@ -64,17 +64,17 @@ contract AWOptimismCityPathfinder is ERC721 {
     /**
      * claim
      */
-    mapping(address => bool) addressToClaimed;
+    mapping(address => bool) public hasClaimed;
 
     modifier onlySingleClaim() {
-        require(!addressToClaimed[msg.sender], "AWOptimismCityPathfinder: reward is already claimed");
+        require(!hasClaimed[msg.sender], "AWOptimismCityPathfinder: reward is already claimed");
         _;
     }
 
     function claim(bytes32[] calldata proof) external onlyWhitelisted(proof) onlySingleClaim {
         uint256 tokenId = totalSupply + 1;
         totalSupply++;
-        addressToClaimed[msg.sender] = true;
+        hasClaimed[msg.sender] = true;
         _safeMint(msg.sender, tokenId);
     }
 

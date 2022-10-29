@@ -13,7 +13,7 @@ forge install
 ### Test
 
 ```
-forge test -vv
+forge test -vv --gas-report
 ```
 
 ### Deploy
