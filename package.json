@@ -1,5 +1,5 @@
 {
-  "name": "alpha-pass-contract",
+  "name": "op-pathfinder-contract",
   "description": "",
   "directories": {
     "lib": "lib",
@@ -7,7 +7,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/atlantis-world-core/alpha-pass-contract.git"
+    "url": "git+https://github.com/atlantis-world-core/op-pathfinder-contract.git"
   },
   "scripts": {
     "test": "hardhat test",

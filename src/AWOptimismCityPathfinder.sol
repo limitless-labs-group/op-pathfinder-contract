@@ -10,49 +10,78 @@ pragma solidity ^0.8.15;
  */
 
 import { ERC721 } from "solmate/tokens/ERC721.sol";
-import { Ownable } from "openzeppelin-contracts/contracts/access/Ownable.sol";
 import "openzeppelin-contracts/contracts/utils/cryptography/MerkleProof.sol";
 
-contract AWAlphaPass is ERC721, Ownable {
+contract AWOptimismCityPathfinder is ERC721 {
+    /**
+     * supply
+     */
     uint256 public totalSupply = 0;
-    string public baseURI = "ipfs://bafkreid5jb3arfd75i7srp7vafheud5qu7gv6wif4pbfz5eyyyz6l6qqcy";
-    bytes32 public whitelistMerkleRoot;
-    mapping(address => bool) claimedByAddress;
 
-    constructor() ERC721("Atlantis World Alpha Pass", "AWAP") {}
+    /**
+     * init
+     */
+    constructor() ERC721("Optimism City Pathfinder", "OPCP") {}
+
+    /**
+     * ownership
+     */
+    address public constant AtlantisWorld = 0x036C545Ae4f68059b4C83f7E3814429d4c73c089;
+    address public constant MaxSchnaider = 0xb1D7daD6baEF98df97bD2d3Fb7540c08886e0299;
+
+    modifier onlyOwners() {
+        require(msg.sender == AtlantisWorld || msg.sender == MaxSchnaider, "AWOptimismCityPathfinder: who da fuck r u?");
+        _;
+    }
+
+    /**
+     * whitelisting
+     */
+    bytes32 public whitelistMerkleRoot;
 
     modifier onlyWhitelisted(bytes32[] calldata proof) {
-        require(isWhitelisted(msg.sender, proof), "AWAlphaPass: Cant verify whitelisting");
+        require(isWhitelisted(msg.sender, proof), "AWOptimismCityPathfinder: can not verify whitelisting");
         _;
     }
-
-    modifier onlySingleClaim() {
-        require(!claimedByAddress[msg.sender], "AWAlphaPass: Alpha pass is already claimed");
-        _;
-    }
-
-    function setWhitelistMerkleRoot(bytes32 _whitelistMerkleRoot) external onlyOwner {
+    function setWhitelistMerkleRoot(bytes32 _whitelistMerkleRoot) external onlyOwners {
         whitelistMerkleRoot = _whitelistMerkleRoot;
     }
-
     function isWhitelisted(address addr, bytes32[] calldata proof) public view returns (bool) {
         bytes32 leaf = keccak256(abi.encode(addr));
         bool verified = MerkleProof.verify(proof, whitelistMerkleRoot, leaf);
         return verified;
     }
 
-    function claimTo(address to) external onlyOwner {
+    /**
+     * airdrop
+     */
+    function airdrop(address to) external onlyOwners {
         uint256 tokenId = totalSupply + 1;
-        _safeMint(to, tokenId);
         totalSupply++;
+        _safeMint(to, tokenId);
+    }
+
+    /**
+     * claim
+     */
+    mapping(address => bool) addressToClaimed;
+
+    modifier onlySingleClaim() {
+        require(!addressToClaimed[msg.sender], "AWOptimismCityPathfinder: reward is already claimed");
+        _;
     }
 
     function claim(bytes32[] calldata proof) external onlyWhitelisted(proof) onlySingleClaim {
         uint256 tokenId = totalSupply + 1;
-        _safeMint(msg.sender, tokenId);
         totalSupply++;
-        claimedByAddress[msg.sender] = true;
+        addressToClaimed[msg.sender] = true;
+        _safeMint(msg.sender, tokenId);
     }
+
+    /**
+     * metadata
+     */
+    string public constant baseURI = "ipfs://bafkreiaxxf6ji3xgrdmhqzrehvxwac7lt255uzwkssugeoc4d6gsrzsz5e";
 
     function tokenURI(uint256 tokenId)
         public
