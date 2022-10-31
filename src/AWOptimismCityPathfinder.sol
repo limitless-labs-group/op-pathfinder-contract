@@ -14,9 +14,10 @@ import { ECDSA } from"openzeppelin-contracts/contracts/utils/cryptography/ECDSA.
 
 contract AWOptimismCityPathfinder is ERC721 {
     /**
-     * supply
+     * enumerable
      */
     uint256 public totalSupply = 0;
+    mapping(address => uint256) public ownedTokenId;
 
     /**
      * init
@@ -47,6 +48,7 @@ contract AWOptimismCityPathfinder is ERC721 {
     function airdrop(address to) external onlyOwner {
         uint256 tokenId = totalSupply + 1;
         totalSupply++;
+        ownedTokenId[msg.sender] = tokenId;
         _safeMint(to, tokenId);
     }
 
@@ -64,13 +66,14 @@ contract AWOptimismCityPathfinder is ERC721 {
         uint256 tokenId = totalSupply + 1;
         totalSupply++;
         hasClaimed[msg.sender] = true;
+        ownedTokenId[msg.sender] = tokenId;
         _safeMint(msg.sender, tokenId);
     }
 
     /**
      * metadata
      */
-    string public constant baseURI = "ipfs://bafkreiaxxf6ji3xgrdmhqzrehvxwac7lt255uzwkssugeoc4d6gsrzsz5e";
+    string public constant baseURI = "ipfs://bafkreibikjwbjdj2yo3agy2szjkgd6v3cq4l6zthx34jnzthva2aa3nhtm";
 
     function tokenURI(uint256 tokenId)
         public
