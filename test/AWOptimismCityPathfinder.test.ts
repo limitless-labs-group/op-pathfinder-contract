@@ -6,7 +6,7 @@ import { AWOptimismCityPathfinder } from "../typechain-types";
 
 describe("AWOptimismCityPathfinder", () => {
     let awOptimismCityPathfinder: AWOptimismCityPathfinder;
-    let deployer: SignerWithAddress, addrs: SignerWithAddress[];
+    let owner: SignerWithAddress, addrs: SignerWithAddress[];
 
     const hardhatProvider = new ethers.providers.Web3Provider(network.provider as unknown as ExternalProvider);
 
@@ -14,12 +14,12 @@ describe("AWOptimismCityPathfinder", () => {
     const MaxSchnaiderWallet = new ethers.Wallet(process.env.MS_PRIVATE_KEY ?? "", hardhatProvider);
 
     beforeEach(async () => {
-        [deployer, ...addrs] = await ethers.getSigners();
+        [owner, ...addrs] = await ethers.getSigners();
 
         const AWOptimismCityPathfinder = await ethers.getContractFactory("AWOptimismCityPathfinder");
         awOptimismCityPathfinder = await AWOptimismCityPathfinder.deploy();
 
-        deployer.sendTransaction({
+        owner.sendTransaction({
             to: MaxSchnaider,
             value: ethers.utils.parseEther('1000'),
         });
@@ -30,35 +30,38 @@ describe("AWOptimismCityPathfinder", () => {
     };
 
     it("Should revert if not an owner", async () => {
-        await expect(awOptimismCityPathfinder.airdrop(MaxSchnaider)).to.be.revertedWith('AWOptimismCityPathfinder: Who da fuck r u?');
+        connectMaxSchnaider();
+        await expect(awOptimismCityPathfinder.airdrop(MaxSchnaider)).to.be.revertedWith("Ownable: caller is not the owner");
     });
 
     it("Should airdrop to user if called by owner", async () => {
-        connectMaxSchnaider();
         await awOptimismCityPathfinder.airdrop(MaxSchnaider);
         expect(await awOptimismCityPathfinder.balanceOf(MaxSchnaider)).to.be.equal(1);
         expect(await awOptimismCityPathfinder.totalSupply()).to.be.equal(1);
     });
 
     it("Should revert if invalid signature", async () => {
-        const hash = ethers.utils.solidityKeccak256(['address'], [deployer.address])
-        const signature = await deployer.signMessage(ethers.utils.arrayify(hash))
+        connectMaxSchnaider();
+        const hash = ethers.utils.solidityKeccak256(['address'], [MaxSchnaider])
+        const signature = await MaxSchnaiderWallet.signMessage(ethers.utils.arrayify(hash))
         await expect(awOptimismCityPathfinder.claim(signature)).to.be.revertedWith('AWOptimismCityPathfinder: Invalid signature');
     });
 
     it("Should claim if valid signature", async () => {
-        const hash = ethers.utils.solidityKeccak256(['address'], [deployer.address])
-        const signature = await MaxSchnaiderWallet.signMessage(ethers.utils.arrayify(hash))
+        connectMaxSchnaider();
+        const hash = ethers.utils.solidityKeccak256(['address'], [MaxSchnaider])
+        const signature = await owner.signMessage(ethers.utils.arrayify(hash))
         await awOptimismCityPathfinder.claim(signature);
-        expect(await awOptimismCityPathfinder.balanceOf(deployer.address)).to.be.equal(1);
+        expect(await awOptimismCityPathfinder.balanceOf(MaxSchnaider)).to.be.equal(1);
         expect(await awOptimismCityPathfinder.totalSupply()).to.be.equal(1);
     });
 
     it("Should revert double claim", async () => {
-        const hash = ethers.utils.solidityKeccak256(['address'], [deployer.address])
-        const signature = await MaxSchnaiderWallet.signMessage(ethers.utils.arrayify(hash))
+        connectMaxSchnaider();
+        const hash = ethers.utils.solidityKeccak256(['address'], [MaxSchnaider])
+        const signature = await owner.signMessage(ethers.utils.arrayify(hash))
         await awOptimismCityPathfinder.claim(signature);
-        expect(await awOptimismCityPathfinder.balanceOf(deployer.address)).to.be.equal(1);
+        expect(await awOptimismCityPathfinder.balanceOf(MaxSchnaider)).to.be.equal(1);
         expect(await awOptimismCityPathfinder.totalSupply()).to.be.equal(1);
         await expect(awOptimismCityPathfinder.claim(signature)).to.be.revertedWith('AWOptimismCityPathfinder: Reward is already claimed');
     });

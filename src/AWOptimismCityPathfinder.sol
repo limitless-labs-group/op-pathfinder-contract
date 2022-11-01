@@ -11,8 +11,9 @@ pragma solidity ^0.8.15;
 
 import { ERC721 } from "solmate/tokens/ERC721.sol";
 import { ECDSA } from"openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol";
+import { Ownable } from"openzeppelin-contracts/contracts/access/Ownable.sol";
 
-contract AWOptimismCityPathfinder is ERC721 {
+contract AWOptimismCityPathfinder is ERC721, Ownable {
     /**
      * enumerable
      */
@@ -24,21 +25,10 @@ contract AWOptimismCityPathfinder is ERC721 {
      */
     constructor() ERC721("Optimism City Pathfinder", "OPCP") {}
 
-    /**
-     * ownership
-     */
-    address public constant AtlantisWorld = 0x036C545Ae4f68059b4C83f7E3814429d4c73c089;
-    address public constant MaxSchnaider = 0xb1D7daD6baEF98df97bD2d3Fb7540c08886e0299;
-
-    modifier onlyOwner() {
-        require(msg.sender == AtlantisWorld || msg.sender == MaxSchnaider, "AWOptimismCityPathfinder: Who da fuck r u?");
-        _;
-    }
-
     modifier signedByOwner(bytes calldata signature) {
         bytes32 hash = ECDSA.toEthSignedMessageHash(keccak256(abi.encodePacked(msg.sender)));
         address signer = ECDSA.recover(hash, signature);
-        require(signer == AtlantisWorld || signer == MaxSchnaider, 'AWOptimismCityPathfinder: Invalid signature');
+        require(signer == owner(), 'AWOptimismCityPathfinder: Invalid signature');
         _;
     }
 
